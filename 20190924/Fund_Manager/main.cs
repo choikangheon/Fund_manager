@@ -54,6 +54,7 @@ namespace Fund_Manager
             autoTimer();
             axKHOpenAPI1.Hide(); //로고 숨기기
             axKHOpenAPI1.CommConnect(); // login 
+            Shown += Form1_Shown;// 폼로드후 실행되는 메서드
             axKHOpenAPI1.OnEventConnect += OnEventConnect; // 로그인시 발생하는 이벤트 
             axKHOpenAPI1.OnReceiveTrData += OnReceiveTrData;
             axKHOpenAPI1.OnReceiveConditionVer += get_OnReceiveConditionVer;
@@ -71,10 +72,11 @@ namespace Fund_Manager
 
         }
 
-        private void reload()
+        private void Form1_Shown(Object sender, EventArgs e)
         {
-            axKHOpenAPI1.CommTerminate(); //로그아웃후
-            axKHOpenAPI1.CommConnect();     // 재 로그인
+            Delay(10000);
+            autoSetting();
+
         }
 
         //그리드뷰 속도향상
