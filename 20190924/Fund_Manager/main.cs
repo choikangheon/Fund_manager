@@ -366,7 +366,8 @@ namespace Fund_Manager
                 }
                 for(int i = 0; i< realTimeAccountGridView.Rows.Count; i++)
                 {
-                    if (code.Trim() == (realTimeAccountGridView.Rows[i].Cells[0].Value.ToString()).Trim())
+                    string checkCode = (realTimeAccountGridView.Rows[i].Cells[0].Value.ToString()).Trim();
+                    if (code.Trim() == checkCode.Substring(1))
                         flag = 1;
                 }
                 if (flag == 0)
