@@ -446,7 +446,7 @@ namespace Fund_Manager
                 tradingStrategy ts = new tradingStrategy(account, buyingCondition, buyingOrderOption, totablInvestMent, itemCount);
                 tradingStrategyList.Add(ts);
 
-                MessageBox.Show("전략이 생성되었습니다.");
+                //MessageBox.Show("전략이 생성되었습니다.");
                 AddStrategyToDataGridView(ts);
 
             }
