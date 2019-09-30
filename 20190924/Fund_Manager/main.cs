@@ -28,6 +28,7 @@ namespace Fund_Manager
 
     public partial class main : MetroForm
     {
+        private int real_cnt = 0;
         private int cnt = 0;
         private int _ScrNum = 5000;
         List<condition> conditionList = new List<condition>();  // 조건식의 INDEX ,  NAME 저장
@@ -43,11 +44,6 @@ namespace Fund_Manager
             //WindowState = FormWindowState.Maximized;
 
             //BackColor = Color.RoyalBlue;
-
-
-
-
-
 
 
             InitializeComponent();
@@ -74,8 +70,17 @@ namespace Fund_Manager
 
         private void Form1_Shown(Object sender, EventArgs e)
         {
-            Delay(10000);
-            autoSetting();
+            // Delay(10000);
+            while (true)
+            {
+                Delay(1000);
+                if (lb이름.Text.Length > 0)
+                {
+                    
+                    autoSetting();
+                    break;
+                }
+            }
 
         }
 
@@ -111,15 +116,14 @@ namespace Fund_Manager
         }
 
 
-        private void autoTimer()
+
+        private void errorReset(object sender, ElapsedEventArgs e)
         {
-            System.Timers.Timer autoTimer = new System.Timers.Timer();
-            autoTimer.Elapsed += new ElapsedEventHandler(autoFundStart);
-
-            autoTimer.Interval = 1300;
-            autoTimer.Enabled = false;
-
+            if(realTimeAccountOfflabel.Checked==true)
+            System.Windows.Forms.Application.Restart();
+            
         }
+
 
         private void axKHOpenApi_OnReceiveChejanData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveChejanDataEvent e) //체결되면 반환
         {
@@ -350,7 +354,7 @@ namespace Fund_Manager
 
         private void OnReceiveRealCondition(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealConditionEvent e)
         {
-            string code = e.sTrCode;
+            string code = e.sTrCode.Trim();
             string condition_name = e.strConditionName;
             string condition_index = e.strConditionIndex;
 
@@ -374,10 +378,27 @@ namespace Fund_Manager
                 }
                 if (flag == 0)
                 {
-                    axKHOpenAPI1.SetInputValue("종목코드", code);
-                    axKHOpenAPI1.CommRqData("주식기본정보요청", "opt10001", 0, GetScrNum());
-                    Console.WriteLine("요청성공");
-                    Delay(500);
+                    real_cnt++;
+                    if (real_cnt >= 4)
+                    {
+                        Delay(1000);
+                        real_cnt = 0;
+                    }
+                        axKHOpenAPI1.SetInputValue("종목코드", code);
+                     Console.WriteLine(axKHOpenAPI1.CommRqData("주식기본정보요청", "opt10001", 0, GetScrNum()));                     
+                      Console.WriteLine("요청성공");
+
+                    System.Timers.Timer autoTimer = new System.Timers.Timer();
+                    autoTimer.Interval = 5000;
+                    autoTimer.Elapsed += new ElapsedEventHandler(errorReset);
+                    autoTimer.Start();
+                    if (realTimeAccountOnlabel.Checked == true) {
+                        autoTimer.Close();
+                        autoTimer.Enabled = false;
+                    }
+                       
+
+
                 }
                 else
                 {
@@ -395,6 +416,7 @@ namespace Fund_Manager
             }
 
         }
+
 
         /*매수전략 생성*/
         private void createStrategy()
@@ -514,7 +536,7 @@ namespace Fund_Manager
 
             if (e.sRQName == "주식기본정보요청")
             {
-
+                Console.WriteLine(e.sErrorCode);
                 Delay(500);
                 Console.WriteLine("추가정보 반환");
                 int nCnt = axKHOpenAPI1.GetRepeatCnt(e.sTrCode, e.sRQName);
