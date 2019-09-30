@@ -47,7 +47,7 @@ namespace Fund_Manager
 
 
             InitializeComponent();
-            autoTimer();
+         
             axKHOpenAPI1.Hide(); //로고 숨기기
             axKHOpenAPI1.CommConnect(); // login 
             Shown += Form1_Shown;// 폼로드후 실행되는 메서드
