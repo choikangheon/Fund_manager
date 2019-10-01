@@ -36,6 +36,7 @@ namespace Fund_Manager
         List<realTimeFund> realTimeFundList = new List<realTimeFund>(); // 실시간 조건검색후 저장할 주식정보
         List<accountFund> accountFundList = new List<accountFund>(); // 실시간 잔고현황
 
+        System.Timers.Timer autoTimer = new System.Timers.Timer();
         public main()
         {
 
@@ -119,8 +120,17 @@ namespace Fund_Manager
 
         private void errorReset(object sender, ElapsedEventArgs e)
         {
-            if(realTimeAccountOfflabel.Checked==true)
-            System.Windows.Forms.Application.Restart();
+            if (realTimeAccountOnlabel.Checked == true)
+            {
+                autoTimer.Enabled = false;
+                
+            }
+            if (realTimeAccountOfflabel.Checked == true)
+            {
+                autoTimer.Enabled = false;
+                autoTimer.Dispose();
+                System.Windows.Forms.Application.Restart();
+            }
             
         }
 
@@ -388,14 +398,11 @@ namespace Fund_Manager
                      Console.WriteLine(axKHOpenAPI1.CommRqData("주식기본정보요청", "opt10001", 0, GetScrNum()));                     
                       Console.WriteLine("요청성공");
 
-                    System.Timers.Timer autoTimer = new System.Timers.Timer();
+                  
                     autoTimer.Interval = 5000;
                     autoTimer.Elapsed += new ElapsedEventHandler(errorReset);
                     autoTimer.Start();
-                    if (realTimeAccountOnlabel.Checked == true) {
-                        autoTimer.Close();
-                        autoTimer.Enabled = false;
-                    }
+                    
                        
 
 
