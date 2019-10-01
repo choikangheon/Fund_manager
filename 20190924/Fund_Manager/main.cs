@@ -37,6 +37,7 @@ namespace Fund_Manager
         List<accountFund> accountFundList = new List<accountFund>(); // 실시간 잔고현황
 
         System.Timers.Timer autoTimer = new System.Timers.Timer();
+        
         public main()
         {
 
@@ -731,7 +732,7 @@ namespace Fund_Manager
 
             cnt++;
             Console.WriteLine(cnt);
-            if (cnt >= 998)
+            if (cnt >= 930)
             {
                 cnt = 0;
                 axKHOpenAPI1.CommTerminate(); //로그아웃후
