@@ -323,7 +323,6 @@ C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\bin\Debug\Met
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\bin\Debug\MetroFramework.Fonts.dll
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\bin\Debug\Interop.KHOpenAPILib.dll
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\bin\Debug\AxInterop.KHOpenAPILib.dll
-C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\obj\Debug\Fund_Manager.csprojAssemblyReference.cache
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\obj\Debug\Interop.KHOpenAPILib.dll
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\obj\Debug\AxInterop.KHOpenAPILib.dll
 C:\Users\ICDET\Documents\GitHub\Fund_manager\20190924\Fund_Manager\obj\Debug\Fund_Manager.csproj.ResolveComReference.cache

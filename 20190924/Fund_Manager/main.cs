@@ -11,6 +11,7 @@ using MetroFramework.Forms;
 using System.Threading;
 using System.Timers;
 using System.Media;
+using System.Diagnostics;
 /*
 ***************************************************                      
 *                                                 *    
@@ -129,8 +130,28 @@ namespace Fund_Manager
             if (realTimeAccountOfflabel.Checked == true)
             {
                 autoTimer.Enabled = false;
+                
                 autoTimer.Dispose();
+
+                Delay(1000);
                 System.Windows.Forms.Application.Restart();
+
+                /*Process[] processNm = Process.GetProcessesByName("NKStater");
+
+                Process rocessCurrent = Process.GetCurrentProcess();
+
+                foreach (Process proc in processNm)
+
+                {
+
+                    if (proc.Id != rocessCurrent.Id)
+
+                        proc.Kill();
+
+                }
+                */
+
+
             }
             
         }
@@ -501,7 +522,7 @@ namespace Fund_Manager
         /* 서버로 부터 반환된 정보들을 출력하는 매서드*/
         public void OnReceiveTrData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrDataEvent e)
         {
-
+            
             if (e.sRQName == ("예수금상세현황"))
             {
                 
@@ -636,7 +657,8 @@ namespace Fund_Manager
                 int 손익 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "총평가손익금액"));
                 float 수익률 = float.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "총수익률(%)"));
 
-                수익률 += -1;
+                수익률 -= 100;
+                수익률 = 수익률 / 100;
                 /*  if (Single.TryParse(수익률, out f수익률))
                       수익률 = String.Format("{0:0.00%}", f수익률);
                  */
@@ -653,6 +675,7 @@ namespace Fund_Manager
             {
                 // API를 통해 주식별 정보출력
 
+                Console.WriteLine(e.sErrorCode);
                 int idex = -1;
 
                 int nCnt = axKHOpenAPI1.GetRepeatCnt(e.sTrCode, "계좌잔고개별");
@@ -667,8 +690,8 @@ namespace Fund_Manager
                         int 현재가 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "현재가"));
                         int 매입금 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "매입가"));
                         int 보유수량 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "보유수량"));
-                        float 수익률 = float.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "수익률(%)"));
-
+                        double 수익률 = (double.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "수익률(%)")))/100;
+                       // 수익률 -= 1;
                         accountFund af = new accountFund(종목코드, 종목명, 현재가, 매입금, 보유수량, 수익률);
 
                         for (int j = 0; j < realTimeAccountGridView.Rows.Count; j++)
@@ -709,11 +732,12 @@ namespace Fund_Manager
                         {
                             accountFundList.Add(af);
                             realTimeAccountGridView.Rows.Add(af.종목코드, af.종목명, af.현재가, af.매입금, af.보유수량 + "주", af.수익률 + "%");
+                            
 
                         }
-                        if (af.수익률 >= 1.5 || af.수익률 <= -3)
+                        if (af.수익률 >= 3 || af.수익률 <= -5)
                         {
-                            sellOrder(af.종목코드, af.보유수량);
+                           sellOrder(af.종목코드, af.보유수량);
                         }
                         gridColor();
 
@@ -875,7 +899,7 @@ namespace Fund_Manager
             axKHOpenAPI1.CommRqData("예수금상세현황", "opw00001", 0, GetScrNum());
             buycondition_combo.Text = buycondition_combo.Items[0].ToString();
             realTimeConditionCombo.Text = realTimeConditionCombo.Items[0].ToString();
-            itemcountnumeric2.Value = 5;
+            itemcountnumeric2.Value = 2;
             Delay(300);
             createStrategy();
             realTimeAccountOnlabel.Checked = true;
