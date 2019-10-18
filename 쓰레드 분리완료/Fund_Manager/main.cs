@@ -138,6 +138,7 @@ namespace Fund_Manager
             {
                 autoTimer.Enabled = false;
                 autoTimer.Dispose();
+                Delay(1000);
                 System.Windows.Forms.Application.Restart();
             }
             
@@ -675,7 +676,7 @@ namespace Fund_Manager
                         int 현재가 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "현재가"));
                         int 매입금 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "매입가"));
                         int 보유수량 = int.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "보유수량"));
-                        float 수익률 = float.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "수익률(%)"));
+                        float 수익률 = (float.Parse(axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, i, "수익률(%)")))/100;
 
                         accountFund af = new accountFund(종목코드, 종목명, 현재가, 매입금, 보유수량, 수익률);
 
@@ -719,7 +720,7 @@ namespace Fund_Manager
                             realTimeAccountGridView.Rows.Add(af.종목코드, af.종목명, af.현재가, af.매입금, af.보유수량 + "주", af.수익률 + "%");
 
                         }
-                        if (af.수익률 >= 1.5 || af.수익률 <= -3)
+                        if (af.수익률 >= 2 || af.수익률 <= -3)
                         {
                             sellOrder(af.종목코드, af.보유수량);
                         }
@@ -848,7 +849,7 @@ namespace Fund_Manager
 
         private void RadioButton1_CheckedChanged_1(object sender, EventArgs e)
         {
-            timer1.Interval = 1300;
+            timer1.Interval = 1700;
             timer1.Elapsed += new ElapsedEventHandler(timer_realTime);
             timer1.Enabled = true;
         }

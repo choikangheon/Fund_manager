@@ -13,9 +13,9 @@ namespace Fund_Manager
         public int 현재가;
         public int 매입금;
         public int 보유수량;
-        public float 수익률;
+        public double 수익률;
 
-        public accountFund(string 종목코드, string 종목명, int 현재가, int 매입금, int 보유수량, float 수익률)
+        public accountFund(string 종목코드, string 종목명, int 현재가, int 매입금, int 보유수량, double 수익률)
         {
             this.종목코드 = 종목코드;
             this.종목명 = 종목명;
