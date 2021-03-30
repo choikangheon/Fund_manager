@@ -18,13 +18,14 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Fund_Manager
 {
-    public class fundTradingBot
+    public class fundTradingBot 
     {
-        private static readonly string _token = "1719732202:AAGHrNAeAl5i_Oxix2Wqd4n7h7AcVp3hqIo";
+        private static readonly string _token = "1712748883:AAGe_6aebOsoytAdbARlx4oAQvAazXq0rtA";
         private static readonly string _chid = "-583357250";
-
+       //public static Client client = new Client();
         public static TelegramBotClient Bot = new TelegramBotClient(_token);
-        public static Client client = new Client();
+
+        
         public async void telegramAPIAsync()
         {
             var me = await Bot.GetMeAsync();
@@ -51,7 +52,7 @@ namespace Fund_Manager
 
                     string response = "the Number of letters in your text is -> ";
                     response += e.Message.Text.ToString();
-                    //Bot.SendTextMessageAsync(e.Message.Chat.Id, response);
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, "하");
 
                 }
 
@@ -61,11 +62,16 @@ namespace Fund_Manager
                     string 종목코드 = "";
                     int 보유수량 =  0;
 
-                    //client.sellBot(종목코드, 보유수량);
-                    string response = "";
-                      
-                    response += e.Message.Text;
-                    Bot.SendTextMessageAsync(e.Message.Chat.Id, response);
+                    
+                    //  client.sellBot(종목코드, 보유수량);
+                    string response = e.Message.Text.ToString();
+                    // /sell(종목코드,숫자)
+                    string[] vs = response.Split('(',',',')'); ////sell(종목코드,수량)      
+
+                
+                    string test = "sellBot(" + vs[1] + ","+vs[2]+")";
+                    
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, test);
 
                 }
               

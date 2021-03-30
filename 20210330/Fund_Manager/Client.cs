@@ -5,7 +5,18 @@ using System.Drawing;
 using System.Media;
 using System.Timers;
 using System.Windows.Forms;
+
+
+///텔레그램 dll using
+using Telegram.Bot;
+using Telegram.Bot.Args;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
+
 /*
+ * 
+ * 
 ***************************************************                      
 *                                                 *    
 *    키움증권 api 를 사용한 자동매매 프로그램     *   
@@ -29,11 +40,17 @@ namespace Fund_Manager
         List<tradingStrategy> tradingStrategyList = new List<tradingStrategy>();    // 매수 조건 저장
         List<realTimeFund> realTimeFundList = new List<realTimeFund>(); // 실시간 조건검색후 저장할 주식정보
         List<accountFund> accountFundList = new List<accountFund>(); // 실시간 잔고현황
-       
+
         System.Timers.Timer autoTimer = new System.Timers.Timer();
-        
+
+        //telegram
+
+        private static readonly string _token = "1712748883:AAGe_6aebOsoytAdbARlx4oAQvAazXq0rtA";
+        private static readonly string _chid = "-583357250";
+        public static TelegramBotClient Bot = new TelegramBotClient(_token);
         public Client()
         {
+
 
             //FormBorderStyle = FormBorderStyle.None;
 
@@ -44,6 +61,7 @@ namespace Fund_Manager
 
             InitializeComponent();
 
+           
             axKHOpenAPI1.Hide(); //로고 숨기기
             axKHOpenAPI1.CommConnect(); // login 
             Shown += Form1_Shown;// 폼로드후 실행되는 메서드
@@ -66,11 +84,12 @@ namespace Fund_Manager
              ftbot.
 
             */
-            fundTradingBot fbot = new fundTradingBot();
+          
 
-            fundTradingBot.Bot.StartReceiving();
-            fundTradingBot.Bot.OnMessage += fbot.Bot_Onmessage;
 
+            Bot.StartReceiving();
+            Bot.OnMessage += Bot_Onmessage;
+           
             //autoSettingButton.Click += autoSetting;
 
 
@@ -235,7 +254,7 @@ namespace Fund_Manager
 
                         if (0 < tradingStrategyList[0].buyingItemCount)
                         {
-                            if (startBuyRadio.Checked == true || stopBuyRadio.Checked == false)
+                            if (startBuyRadio.Checked == true && stopBuyRadio.Checked == false)
                             {
                                 buyOrder(realTimeFundList[j].종목코드, fundCount);
                                 tradingStrategyList[0].buyingItemCount += -1;
@@ -272,25 +291,25 @@ namespace Fund_Manager
                 System.Windows.Forms.MessageBox.Show("계좌를 선택해주세요.");
                 return;
             }
-            else
+            else 
             {
                 //주문하기 
                 int lRet = axKHOpenAPI1.SendOrder("주식주문", GetScrNum(), this.accountComboBox.Text.Trim(), 1, 종목코드, 수량, 0, "03", "");
 
                 if (lRet == 0)
                 {
-                    Console.WriteLine("주문이 전송 되었습니다");
+                    Console.WriteLine("구매주문이 전송 되었습니다");
                     Console.WriteLine(종목코드 + "," + 수량);
                 }
                 else
                 {
-                    Console.WriteLine("주문이 전송 실패 하였습니다.");
+                    Console.WriteLine("구매주문이 전송 실패 하였습니다.");
                     Console.WriteLine(종목코드 + "," + 수량);
                 }
             }
 
         }
-        public void sellBot(String 종목코드, int 보유수량)
+        public  void sellBot(String 종목코드, int 보유수량)
         {
             sellOrder( 종목코드,  보유수량);
         }
@@ -298,7 +317,7 @@ namespace Fund_Manager
         private void sellOrder(String 종목코드, int 보유수량)
         {
             string newCode = (종목코드.Substring(1)).Trim();
-            Console.WriteLine("판매 + " + newCode);
+            Console.WriteLine("종목코드 + " + newCode + " 판매수량:"+보유수량);
             if (accountComboBox.Text.Length != 10)
             {
                 MessageBox.Show("계좌번호를 입력해주세요");
@@ -600,19 +619,19 @@ namespace Fund_Manager
                         Console.WriteLine(rtf.종목코드.Trim());
                         Console.WriteLine("그리드뷰" + realTimeAccountGridView.Rows[i].Cells[0]);
                     }
-                    if (flag != 1)
+                    if (flag != 1)  //동일종목이 없으면
                     {
                         int count = price / int.Parse(rtf.현재가.Remove(0, 1));
                         if (count >= 10 && startBuyRadio.Checked == true)
                         {
                             buyOrder(rtf.종목코드, count); // 10개이상일떄만 구매
                             Console.WriteLine("10개이상으로 구매성공 startBuyRadio 매수ok");
-
+                            realTimeAccountOnlabel.Checked = true;
+                            tradingStrategyList[0].buyingItemCount += -1;
                         }
                         else
                             Console.Write("10이하 구매실패");
-                        realTimeAccountOnlabel.Checked = true;
-                        tradingStrategyList[0].buyingItemCount += -1;
+                        
                     }
                     else
                     {
@@ -939,7 +958,87 @@ namespace Fund_Manager
             sellOrder((sellOrderCode.Text).Trim(), int.Parse(sellOrderCount.Text));
         }
 
- 
+
+
+        public async void telegramAPIAsync()
+        {
+            var me = await Bot.GetMeAsync();
+            Console.WriteLine("내 이름은 {0}", me.Username);
+        }
+
+
+        public async void SendMessage(string msg)
+        {
+            Bot.SendTextMessageAsync(_chid, msg);
+        }
+
+
+
+        public void Bot_Onmessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        {
+
+
+            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
+            {
+
+                if (e.Message.Text.StartsWith("/count"))
+                {
+
+
+                    string response = "the Number of letters in your text is -> ";
+                    response += e.Message.Text.ToString();
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, "하");
+
+                }
+
+                else if (e.Message.Text.StartsWith("/sell"))
+                {
+
+                    string 종목코드 = "";
+                    int 보유수량 = 0;
+
+
+                    //  client.sellBot(종목코드, 보유수량);
+                    string response = e.Message.Text.ToString();
+                    // /sell(종목코드,숫자)
+                    string[] vs = response.Split('(', ',', ')'); ////sell(종목코드,수량)      
+                    종목코드 = vs[1].ToString();
+                    보유수량 = int.Parse(vs[2]);
+
+                    sellOrder(종목코드.Trim(),보유수량);
+                    string res = "종목코드:" + 종목코드 + "  보유수량:" + 보유수량 + "판매완료";
+
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, res);
+
+                }
+
+                else if (e.Message.Text.StartsWith("/buy"))
+                {
+
+                    string 종목코드 = "";
+                    int 구매수량 = 0;
+
+
+                    //  client.sellBot(종목코드, 보유수량);
+                    string response = e.Message.Text.ToString();
+                    // /sell(종목코드,숫자)
+                    string[] vs = response.Split('(', ',', ')'); ////sell(종목코드,수량)      
+                    종목코드 = vs[1].ToString();
+                    구매수량 = int.Parse(vs[2]);
+
+                    buyOrder(종목코드.Trim(), 구매수량);
+                    string res = "종목코드:" + 종목코드 + "  보유수량:" + 구매수량 + "구매완료";
+
+                    Bot.SendTextMessageAsync(e.Message.Chat.Id, res);
+
+                }
+
+
+            }
+
+
+
+
+        }
     }
 }
-
