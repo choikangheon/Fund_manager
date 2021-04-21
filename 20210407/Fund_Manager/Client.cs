@@ -100,8 +100,8 @@ namespace Fund_Manager
 
             read_ini();
 
-            Bot.StartReceiving();
-            Bot.OnMessage += Bot_Onmessage;
+          //  Bot.StartReceiving();
+        //    Bot.OnMessage += Bot_Onmessage;
            
             //autoSettingButton.Click += autoSetting;
 
@@ -171,10 +171,12 @@ namespace Fund_Manager
                 autoTimer.Dispose();
 
                 Delay(1000);
-                System.Windows.Forms.Application.Restart();
+                axKHOpenAPI1.Hide(); //로고 숨기기
+                axKHOpenAPI1.CommConnect(); // login
+                 // System.Windows.Forms.Application.Restart();
 
             }
-            
+
         }
 
 
@@ -597,7 +599,6 @@ namespace Fund_Manager
             }
 
 
-
             if (e.sRQName == "주식기본정보요청")
             {
                 Console.WriteLine(e.sErrorCode);
@@ -622,7 +623,7 @@ namespace Fund_Manager
                 realTimeFundList.Add(rtf);
 
                 Console.WriteLine(tradingStrategyList[0].buyingItemCount);
-                if (0 <= tradingStrategyList[0].buyingItemCount)
+                if (0 <= tradingStrategyList[0].buyingItemCount && startBuyRadio.Checked == true)
                 {
                     for (int i = 0; i < realTimeAccountGridView.Rows.Count; i++)
                     {
@@ -634,7 +635,7 @@ namespace Fund_Manager
                         Console.WriteLine(rtf.종목코드.Trim());
                         Console.WriteLine("그리드뷰" + realTimeAccountGridView.Rows[i].Cells[0]);
                     }
-                    if (flag != 1 && startBuyRadio.Checked == true)  //동일종목이 없으면
+                    if (flag != 1)  //동일종목이 없으면
                     {
                         int count = price / int.Parse(rtf.현재가.Remove(0, 1));
                         if (count >= 10 && total_fund <= 5)
@@ -646,7 +647,7 @@ namespace Fund_Manager
                         }
                         else
                         {
-                            Console.Write("10이하 구매실패,자동구매 OFF");
+                            Console.Write("구매수량 10 이하,Fail");
                             Delay(500);
                             realTimeAccountOnlabel.Checked = true;
                         }
@@ -655,8 +656,15 @@ namespace Fund_Manager
                     {
                         Delay(500);
                         realTimeAccountOnlabel.Checked = true;
-                        MessageBox.Show("동일종목보유");
+                        Console.WriteLine("동일종목보유");
                     }
+                }
+
+                else
+                {
+                    Delay(500);
+                    realTimeAccountOnlabel.Checked = true;
+                    Console.WriteLine("매수 비 활성화");
                 }
 
 
@@ -821,9 +829,11 @@ namespace Fund_Manager
                                               // axKHOpenAPI1.CommConnect();     // 재 로그인
 
                 init_ini(targetPrice.Text);
-                System.Windows.Forms.Application.Restart();
+                axKHOpenAPI1.Hide(); //로고 숨기기
+                axKHOpenAPI1.CommConnect(); // login
+                                            // System.Windows.Forms.Application.Restart();
 
- 
+
 
             }
 
@@ -1004,7 +1014,7 @@ namespace Fund_Manager
 
 
 
-        public void Bot_Onmessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+       /* public void Bot_Onmessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
 
 
@@ -1070,7 +1080,7 @@ namespace Fund_Manager
 
 
         }
-
+       */
 
         public void init_ini(string tP)
         {

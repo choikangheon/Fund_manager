@@ -1,0 +1,10 @@
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.csprojAssemblyReference.cache
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_Manager.Form1.resources
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.Properties.Resources.resources
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.csproj.GenerateResource.cache
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.csproj.CoreCompileInputs.cache
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\bin\Debug\Fund_ManerStart.exe.config
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\bin\Debug\Fund_ManerStart.exe
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\bin\Debug\Fund_ManerStart.pdb
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.exe
+C:\Users\최강헌\Desktop\주식자동매매\20210326\Fund_ManerStart\obj\Debug\Fund_ManerStart.pdb
